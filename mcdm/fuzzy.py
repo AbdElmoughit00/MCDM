@@ -118,7 +118,37 @@ def pfn_scale(lam, A):
     return 1 - (1 - A[0]) ** lam, A[1] ** lam, A[2] ** lam
 
 
+def pfn_power(A, lam):
+    return A[0] ** lam, 1 - (1 - A[1]) ** lam, 1 - (1 - A[2]) ** lam
+
+
+def ivq_hesitation(mu, nu, q):
+    """q-ROF à valeur d'intervalle : π = [ (1 - μU^q - νU^q)^(1/q), (1 - μL^q - νL^q)^(1/q) ]."""
+    (mu_l, mu_u), (nu_l, nu_u) = mu, nu
+    if not (0 <= mu_l <= mu_u <= 1 and 0 <= nu_l <= nu_u <= 1):
+        raise ValueError("Il faut des intervalles [L, U] inclus dans [0, 1] avec L ≤ U")
+    if mu_u ** q + nu_u ** q > 1 + 1e-12:
+        raise ValueError(f"μU^{q} + νU^{q} > 1 : ce n'est pas un ensemble q-ROF à valeur d'intervalle")
+    return (1 - mu_u ** q - nu_u ** q) ** (1 / q), (1 - mu_l ** q - nu_l ** q) ** (1 / q)
+
+
 # ---------- Ensembles flous hésitants ----------
+
+
+def hfe_power(h, a):
+    return sorted({round(g ** a, 6) for g in h})
+
+
+def hfe_scale(a, h):
+    return sorted({round(1 - (1 - g) ** a, 6) for g in h})
+
+
+def hfe_add(h1, h2):
+    return sorted({round(g1 + g2 - g1 * g2, 6) for g1 in h1 for g2 in h2})
+
+
+def hfe_mul(h1, h2):
+    return sorted({round(g1 * g2, 6) for g1 in h1 for g2 in h2})
 
 
 def hfe_score(h):

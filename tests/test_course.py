@@ -135,3 +135,32 @@ def test_if_topsis_cloud():
 def test_ifwa_identity():
     a = (0.6, 0.3)
     assert fuzzy.ifwa([a, a], [0.5, 0.5]) == pytest.approx(a)
+
+
+def test_ifn_operations():
+    a, b = (0.6, 0.3), (0.5, 0.3)
+    assert fuzzy.ifn_add(a, b) == pytest.approx((0.8, 0.09))
+    assert fuzzy.ifn_mul(a, b) == pytest.approx((0.3, 0.51))
+    assert fuzzy.ifn_scale(2, a) == pytest.approx((0.84, 0.09))
+    assert fuzzy.ifn_power(a, 2) == pytest.approx((0.36, 0.51))
+
+
+def test_interval_qrof_hesitation():
+    lo, hi = fuzzy.ivq_hesitation((0.5, 0.7), (0.2, 0.4), 3)
+    assert lo == pytest.approx((1 - 0.7 ** 3 - 0.4 ** 3) ** (1 / 3))
+    assert hi == pytest.approx((1 - 0.5 ** 3 - 0.2 ** 3) ** (1 / 3))
+    with pytest.raises(ValueError):
+        fuzzy.ivq_hesitation((0.5, 0.9), (0.5, 0.9), 2)
+
+
+def test_picture_and_hesitant_operations():
+    assert fuzzy.pfn_power((0.5, 0.2, 0.1), 2) == pytest.approx((0.25, 0.36, 0.19))
+    assert fuzzy.hfe_add([0.2, 0.4], [0.5]) == pytest.approx([0.6, 0.7])
+    assert fuzzy.hfe_mul([0.2, 0.4], [0.5]) == pytest.approx([0.1, 0.2])
+    assert fuzzy.hfe_power([0.5], 2) == pytest.approx([0.25])
+    assert fuzzy.hfe_scale(2, [0.5]) == pytest.approx([0.75])
+
+
+def test_distance_to_ideal_bounds():
+    assert single.distance_to_ideal([1, 1, 1])[2] == pytest.approx(1)
+    assert single.distance_to_ideal([0, 0, 0])[2] == pytest.approx(0)

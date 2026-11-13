@@ -17,12 +17,11 @@ def maut(x, w, lo, hi, types):
     return u, float(np.asarray(w, dtype=float) @ u)
 
 
-def distance_to_ideal(u, w=None):
-    """Indice C = D- / (D+ + D-) d'une alternative en utilités : idéal = 1, anti-idéal = 0."""
+def distance_to_ideal(u):
+    """Indice C = D- / (D+ + D-) d'une alternative en utilités normalisées : idéal = 1, anti-idéal = 0."""
     u = np.asarray(u, dtype=float)
-    w = np.ones_like(u) if w is None else np.asarray(w, dtype=float)
-    d_plus = np.sqrt((w * (u - 1) ** 2).sum())
-    d_minus = np.sqrt((w * u ** 2).sum())
+    d_plus = np.sqrt(((u - 1) ** 2).sum())
+    d_minus = np.sqrt((u ** 2).sum())
     return d_plus, d_minus, d_minus / (d_plus + d_minus)
 
 

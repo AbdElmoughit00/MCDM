@@ -23,8 +23,7 @@ def spearman_heatmap(names, M, title):
     st.plotly_chart(fig, width="stretch", config={"displayModeBar": False})
 
 
-tab_course, tab_compare, tab_sens, tab_mc = st.tabs(
-    ["Exemple du cours", "Comparer les méthodes", "Sensibilité à un poids", "Monte-Carlo sur les poids"])
+tab_course, tab_compare, tab_sens = st.tabs(["Exemple du cours", "Comparer les méthodes", "Sensibilité à un poids"])
 
 with tab_course:
     st.caption("Rangs de A1 à A6 selon trois méthodes (1 = la meilleure)")
@@ -48,13 +47,13 @@ with tab_compare:
     st.dataframe(pd.DataFrame(table, index=alts), width="stretch")
     names, M = rb.spearman_matrix(table)
     spearman_heatmap(names, M, "Accord entre méthodes (ρ de Spearman)")
-    crit_r = rb.critical_rho(len(alts))
     firsts = {alts[int(np.argmin(r))] for r in table.values()}
     off = M[np.triu_indices(len(names), 1)]
+    signif = (f" Avec n = 6, seul ρ ≥ 0,886 est significatif à 5 % : {(off >= 0.886).sum()} paire(s) sur {len(off)}."
+              if len(alts) == 6 else "")
     ui.result((f"Toutes les méthodes placent **{firsts.pop()}** en tête. " if len(firsts) == 1
                else f"La première place dépend de la méthode : {', '.join(sorted(firsts))}. ")
-              + f"ρ minimal = {off.min():.2f} ; seuil de significativité à 5 % pour n = {len(alts)} : ρ ≥ {crit_r:.3f} "
-                f"({(off >= crit_r).sum()} paire(s) sur {len(off)} au-dessus).")
+              + f"ρ minimal = {off.min():.2f}." + signif)
 
 with tab_sens:
     X, types, w = ui.problem_editor("sens", {"Projets d'investissement": ds.INVESTMENTS, "Six fournisseurs": ds.SUPPLIERS6})
@@ -78,24 +77,3 @@ with tab_sens:
     ui.result(f"**{alts[best0]}** reste première tant que w({crit[j]}) ∈ [{stable.min():.2f} ; {stable.max():.2f}] "
               f"(pas de 0,025), pour un poids actuel de {w[j]:.3f}." if len(stable)
               else f"**{alts[best0]}** perd la première place dès que le poids s'écarte de sa valeur actuelle.")
-
-with tab_mc:
-    X, types, w = ui.problem_editor("mc", {"Six fournisseurs": ds.SUPPLIERS6, "Projets d'investissement": ds.INVESTMENTS})
-    alts = list(X.index)
-    c1, c2, c3 = st.columns(3)
-    method = c1.selectbox("Méthode", rb.METHODS, index=2, key="mc-method")
-    conc = c2.select_slider("Dispersion des poids", options=[200, 50, 20, 5],
-                            format_func={200: "faible", 50: "modérée", 20: "forte", 5: "très forte"}.get, value=50)
-    runs = c3.select_slider("Tirages", options=[200, 500, 1000, 2000], value=500)
-    freq, samples = rb.monte_carlo(lambda ws: rb.scores(method, X.to_numpy(float), ws, types), w, runs, conc)
-    fig = go.Figure()
-    shades = [ui.ACCENT, "#c4c4c8", "#a1a1a6", "#85858b", "#5a5a5f", "#3a3a3d"]
-    for k in range(len(alts)):
-        fig.add_bar(y=alts, x=freq[:, k] * 100, orientation="h", name=f"Rang {k + 1}",
-                    marker_color=shades[min(k, len(shades) - 1)])
-    fig.update_layout(barmode="stack", title=f"Fréquence des rangs sur {runs} jeux de poids tirés autour des poids actuels",
-                      height=100 + 40 * len(alts), xaxis_title="% des tirages", yaxis=dict(autorange="reversed"))
-    st.plotly_chart(fig, width="stretch", config={"displayModeBar": False})
-    i = int(np.argmax(freq[:, 0]))
-    ui.result(f"**{alts[i]}** est première dans {freq[i, 0]:.0%} des tirages (Dirichlet centrée sur les poids, "
-              f"écart type moyen des poids ≈ {samples.std(axis=0).mean():.3f}).")

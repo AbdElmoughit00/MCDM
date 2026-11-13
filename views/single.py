@@ -66,8 +66,7 @@ with tab_roc:
     fig.add_scatter(x=[full[i_j, 2]], y=[full[i_j, 1]], mode="markers", marker=dict(size=13, color=ui.ACCENT),
                     name=f"Youden : τ = {full[i_j, 0]:.3f}")
     fig.add_scatter(x=[0], y=[1], mode="markers", marker=dict(size=9, color=ui.INK, symbol="x"), name="Point idéal")
-    auc = np.trapezoid(curve[:, 1], curve[:, 2])
-    fig.update_layout(title=f"Courbe ROC (AUC = {auc:.3f})", height=380, xaxis_title="FPR", yaxis_title="TPR",
+    fig.update_layout(title="Courbe ROC", height=380, xaxis_title="FPR", yaxis_title="TPR",
                       xaxis=dict(range=[-0.02, 1.02]), yaxis=dict(range=[-0.02, 1.05]))
     st.plotly_chart(fig, width="stretch", config={"displayModeBar": False})
     ui.result(f"Distance au point idéal : τ = **{full[i_d, 0]:.3f}** (d = {full[i_d, 3]:.3f}). "
@@ -76,13 +75,13 @@ with tab_roc:
                  else "Ils divergent : on départage selon le coût d'un faux positif ou d'un faux négatif."))
 
 with tab_dist:
-    st.latex(r"D^+=\sqrt{\sum_j w_j(u_j-1)^2}\qquad D^-=\sqrt{\sum_j w_j u_j^2}\qquad C=\frac{D^-}{D^++D^-}")
+    st.latex(r"D^+=\sqrt{\sum_j (u_j-u_j^+)^2}\qquad D^-=\sqrt{\sum_j (u_j-u_j^-)^2}\qquad C=\frac{D^-}{D^++D^-}")
     st.caption("Logique TOPSIS appliquée à un seul dossier : idéal = utilité 1 partout, anti-idéal = 0. "
                "Les valeurs sont celles saisies dans l'onglet Score MAUT")
-    dp, dm, C = distance_to_ideal(u, ds.CREDIT_WEIGHTS)
+    dp, dm, C = distance_to_ideal(u)
     c1, c2, c3 = st.columns(3)
     c1.metric("D+ (distance à l'idéal)", f"{dp:.3f}")
     c2.metric("D− (distance à l'anti-idéal)", f"{dm:.3f}")
     c3.metric("Indice C", f"{C:.3f}")
-    ui.result(f"Indice de performance C = **{C:.3f}**, à comparer à S(A) = {S:.3f} : les deux indices ordonnent les "
-              "dossiers de façon proche, mais C pénalise davantage un critère très faible.")
+    ui.result(f"Indice de performance C = **{C:.3f}** : même avec une seule alternative, on obtient une mesure de "
+              "sa proximité au point idéal.")

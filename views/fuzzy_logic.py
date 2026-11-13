@@ -22,10 +22,11 @@ def parse(text, k):
     return vals
 
 
-tabs = st.tabs(["Fonctions d'appartenance", "Nombres flous et intervalles", "Intuitionniste, pythagoricien, q-ROF",
-                "Pictural", "Hésitant"])
+tabs = st.tabs(["Fonctions d'appartenance", "Variable linguistique", "Nombres flous et intervalles",
+                "Intuitionniste, pythagoricien, q-ROF", "Pictural", "Hésitant"])
+tab_mf, tab_ling, tab_num, tab_ifs, tab_pfs, tab_hfs = tabs
 
-with tabs[0]:
+with tab_mf:
     kind = st.radio("Forme", ["Trapézoïdale", "Triangulaire", "Gaussienne"], horizontal=True)
     c1, c2 = st.columns([2, 3], gap="large")
     with c1:
@@ -67,10 +68,33 @@ with tabs[0]:
                                  f"[{core.min():.1f} ; {core.max():.1f}]" if len(core) else "vide",
                                  f"[{cut.min():.1f} ; {cut.max():.1f}]" if len(cut) else "vide"]})
     st.dataframe(t, hide_index=True, width="stretch")
+    st.caption("Ces trois formes sont des ensembles flous convexes : "
+               "μ(λx₁ + (1 − λ)x₂) ≥ min(μ(x₁), μ(x₂)) pour tous x₁, x₂ et λ ∈ [0, 1]")
     ui.result(f"μ({x0:.1f}) = **{float(mu(np.array([x0]))[0]):.2f}** : x appartient à l'ensemble à "
               f"{float(mu(np.array([x0]))[0]):.0%}, là où la logique booléenne n'admet que 0 ou 1.")
 
-with tabs[1]:
+with tab_ling:
+    st.markdown("Une variable linguistique est un triplet (V, X, T_V) : une variable V, un domaine X et un ensemble "
+                "T_V de termes, chacun décrit par un ensemble flou.")
+    st.caption("Exemple du cours : V = pourboire, X = ℝ+, T_V = {faible, moyen, élevé}")
+    terms = {"faible": (0, 5, 10), "moyen": (10, 15, 20), "élevé": (20, 25, 30)}
+    x_tip = st.slider("Pourboire x", 0.0, 30.0, 12.5, 0.5)
+    xs = np.linspace(0, 30, 601)
+    fig = go.Figure()
+    for (name, (a, b, c)), color in zip(terms.items(), ["#a1a1a6", ui.ACCENT, "#85858b"]):
+        fig.add_scatter(x=xs, y=fz.triangle(xs, a, b, c), name=f"{name} ({a}, {b}, {c})", line=dict(color=color, width=2))
+    fig.add_vline(x=x_tip, line=dict(color="#5a5a5f", dash="dot"))
+    fig.update_layout(height=300, xaxis_title="Pourboire", yaxis=dict(range=[-0.05, 1.1], title="μ"),
+                      legend=dict(orientation="h", y=-0.3))
+    st.plotly_chart(fig, width="stretch", config={"displayModeBar": False})
+    degrees = {name: float(fz.triangle(x_tip, *abc)) for name, abc in terms.items()}
+    st.dataframe(pd.DataFrame({"Terme": list(degrees), "Degré μ(x)": [f"{v:.2f}" for v in degrees.values()]}),
+                 hide_index=True, width="stretch")
+    best = max(degrees, key=degrees.get)
+    ui.result(f"Un pourboire de {x_tip:g} est « {best} » au degré **{degrees[best]:.2f}**." if degrees[best] > 0
+              else f"Un pourboire de {x_tip:g} n'appartient à aucun terme (degré 0 partout).")
+
+with tab_num:
     st.markdown("**Nombres flous trapézoïdaux** N(a, b, c, d) ; triangulaire si b = c")
     c1, c2, c3 = st.columns(3)
     A = parse(c1.text_input("A", "4, 5, 6, 7"), 4)
@@ -91,7 +115,7 @@ with tabs[1]:
     fig.update_layout(height=280, yaxis=dict(range=[-0.05, 1.1], title="μ"), legend=dict(orientation="h", y=-0.25))
     st.plotly_chart(fig, width="stretch", config={"displayModeBar": False})
     ui.result(f"{op} = **({', '.join(f'{v:.3g}' for v in R)})**. La soustraction et la division croisent les "
-              "bornes (a1 − b4, …), ce qui élargit toujours l'incertitude.")
+              "bornes : A − B = (a1 − b4, a2 − b3, a3 − b2, a4 − b1).")
 
     st.markdown("**Nombres d'intervalle** [a1, a2]")
     c1, c2 = st.columns(2)
@@ -109,7 +133,7 @@ with tabs[1]:
     st.caption(f"Centre m(A) = {(I1[0] + I1[1]) / 2:g}, largeur w(A) = {(I1[1] - I1[0]) / 2:g} ; "
                f"A ≤ B ⇔ m(A) ≤ m(B), ici {'vrai' if (I1[0] + I1[1]) <= (I2[0] + I2[1]) else 'faux'}")
 
-with tabs[2]:
+with tab_ifs:
     st.markdown("Un nombre flou à paire orthogonale donne un degré d'appartenance μ, de non-appartenance ν et "
                 "d'hésitation π. La contrainte se relâche avec q : μ + ν ≤ 1 (intuitionniste, Atanassov 1986), "
                 "μ² + ν² ≤ 1 (pythagoricien), μ^q + ν^q ≤ 1 (q-ROF).")
@@ -144,10 +168,31 @@ with tabs[2]:
         agg = fz.ifwa([a, b], [0.5, 0.5])
         ui.result(f"α_saisi = ({mu_:.2f} ; {nu_:.2f}), S = {sa:.2f} ; α_vote = (0,50 ; 0,30), S = {sb:.2f}. "
                   f"Comparaison : **{better}**. Agrégation IFWA à poids égaux : ({agg[0]:.3f} ; {agg[1]:.3f}).")
+        st.markdown("**Opérations sur les nombres intuitionnistes** (α₁ = α_saisi, α₂ = α_vote)")
+        lam_i = st.slider("λ", 0.1, 5.0, 2.0, 0.1, key="lam-ifn")
+        ops = {"α₁ + α₂ = (μ₁ + μ₂ − μ₁μ₂ ; ν₁ν₂)": fz.ifn_add(a, b),
+               "α₁ × α₂ = (μ₁μ₂ ; ν₁ + ν₂ − ν₁ν₂)": fz.ifn_mul(a, b),
+               "λα₁ = (1 − (1 − μ₁)^λ ; ν₁^λ)": fz.ifn_scale(lam_i, a),
+               "α₁^λ = (μ₁^λ ; 1 − (1 − ν₁)^λ)": fz.ifn_power(a, lam_i)}
+        st.dataframe(pd.DataFrame({"Opération": list(ops), "Résultat (μ ; ν)": [f"({m:.3f} ; {n:.3f})" for m, n in ops.values()]}),
+                     hide_index=True, width="stretch")
     else:
         st.info("μ + ν > 1 : le point n'est pas un nombre intuitionniste, seulement pythagoricien ou q-ROF")
 
-with tabs[3]:
+    st.markdown("**q-ROF à valeur d'intervalle** : μ et ν deviennent des intervalles, avec μU^q + νU^q ≤ 1, "
+                "et l'hésitation est elle aussi un intervalle")
+    c1, c2, c3 = st.columns(3)
+    mu_i = parse(c1.text_input("μ = [μL, μU]", "0.5, 0.7"), 2)
+    nu_i = parse(c2.text_input("ν = [νL, νU]", "0.2, 0.4"), 2)
+    q_i = c3.number_input("q", 1, 10, 3)
+    try:
+        pi_l, pi_u = fz.ivq_hesitation(mu_i, nu_i, q_i)
+        st.caption(f"πL = (1 − μU^q − νU^q)^(1/q) = {pi_l:.3f} ; πU = (1 − μL^q − νL^q)^(1/q) = {pi_u:.3f} : "
+                   f"π = [{pi_l:.3f} ; {pi_u:.3f}]")
+    except ValueError as exc:
+        st.error(str(exc))
+
+with tab_pfs:
     st.markdown("Pour un vote à quatre issues (pour, abstention, contre, refus de voter) : μ positif, π neutre, "
                 "ν négatif, avec μ + π + ν ≤ 1 ; le reste est le degré de refus.")
     c1, c2, c3 = st.columns(3)
@@ -159,14 +204,21 @@ with tabs[3]:
         st.error("Pour + abstention + contre dépasse le nombre d'inscrits")
         st.stop()
     A = (pos / total, neg / total, neu / total)
-    lam = st.slider("λ pour λA", 0.1, 5.0, 2.0, 0.1)
-    s = fz.pfn_scale(lam, A)
-    ui.result(f"A = (μ = {A[0]:.2f}, ν = {A[1]:.2f}, π = {A[2]:.2f}), refus = **{1 - sum(A):.2f}**. "
-              f"λA = ({s[0]:.3f} ; {s[1]:.3f} ; {s[2]:.3f}).")
+    st.markdown("**Opérations** (B = second vote : 30 pour, 40 contre, 10 abstentions sur 100)")
+    B = (0.30, 0.40, 0.10)
+    lam = st.slider("λ", 0.1, 5.0, 2.0, 0.1)
+    ops = {"A ⊕ B = (μA + μB − μAμB ; νAνB ; πAπB)": fz.pfn_add(A, B),
+           "λA = (1 − (1 − μA)^λ ; νA^λ ; πA^λ)": fz.pfn_scale(lam, A),
+           "A^λ = (μA^λ ; 1 − (1 − νA)^λ ; 1 − (1 − πA)^λ)": fz.pfn_power(A, lam)}
+    st.dataframe(pd.DataFrame({"Opération": list(ops),
+                               "Résultat (μ ; ν ; π)": [f"({x:.3f} ; {y:.3f} ; {z:.3f})" for x, y, z in ops.values()]}),
+                 hide_index=True, width="stretch")
+    ui.result(f"A = (μ = {A[0]:.2f}, ν = {A[1]:.2f}, π = {A[2]:.2f}), degré de refus = **{1 - sum(A):.2f}**.")
 
-with tabs[4]:
+with tab_hfs:
     st.markdown("Plusieurs décideurs donnent chacun un degré : h = {γ1, γ2, …} (Torra, 2010). On compare par le score "
                 "s(h) = moyenne, puis par la déviation σ(h) en cas d'égalité (la plus petite gagne).")
+    st.caption("Exemple du cours : comparer h1, h2 et h3")
     defaults = ["0.2, 0.3, 0.5, 0.8", "0.4, 0.6, 0.8", "0.3, 0.45, 0.6"]
     hs = []
     cols = st.columns(3)
@@ -187,8 +239,16 @@ with tabs[4]:
     order = sorted(range(3), key=lambda i: (-round(t.iloc[i, 0], 10), round(t.iloc[i, 1], 10)))
     d = pd.DataFrame([[fz.hfe_hamming(hs[i], hs[j]) for j in range(3)] for i in range(3)],
                      index=["h1", "h2", "h3"], columns=["h1", "h2", "h3"])
-    st.caption("Distance de Hamming hésitante (l'ensemble le plus court est complété par sa plus grande valeur)")
+    st.caption("Distance de Hamming hésitante : ||h1 − h2|| = (1/l) Σ |h1σ(k) − h2σ(k)|, l = max des tailles ; "
+               "le cours ne précise pas comment compléter l'ensemble le plus court, ici par sa plus grande valeur")
     ui.table(d, digits=3)
+    st.markdown("**Opérations** sur h1 et h2")
+    a_h = st.slider("α", 0.1, 5.0, 2.0, 0.1, key="alpha-hfe")
+    fmt = lambda h: "{" + ", ".join(f"{g:.3g}" for g in h) + "}"
+    ops = {"h1^α = ∪ {γ^α}": fz.hfe_power(hs[0], a_h), "αh1 = ∪ {1 − (1 − γ)^α}": fz.hfe_scale(a_h, hs[0]),
+           "h1 ⊕ h2 = ∪ {γ1 + γ2 − γ1γ2}": fz.hfe_add(hs[0], hs[1]), "h1 ⊗ h2 = ∪ {γ1γ2}": fz.hfe_mul(hs[0], hs[1])}
+    st.dataframe(pd.DataFrame({"Opération": list(ops), "Résultat": [fmt(h) for h in ops.values()]}),
+                 hide_index=True, width="stretch")
     ui.result("Ordre : **" + " > ".join(f"h{i + 1}" for i in order) + "**"
               + (". h1 et h3 ont le même score (0,45) : la déviation plus faible de h3 le place devant."
                  if [round(x, 6) for x in t.iloc[:, 0]] == [0.45, 0.6, 0.45] else "."))

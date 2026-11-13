@@ -60,4 +60,4 @@ with st.expander("Étape 2 : solution et écarts aux jugements", expanded=True):
 
 ui.ranking_chart(crit, res["weights"], "Poids optimaux des critères")
 ui.result(f"**{crit[best]}** pèse {res['weights'][best]:.3f} ; ξ* = {res['xi']:.4f}"
-          + (", les jugements sont cohérents." if res["xi"] < 0.1 else ", les jugements manquent de cohérence."))
+          + " : plus ξ* est proche de 0, plus les jugements de l'expert sont cohérents.")
