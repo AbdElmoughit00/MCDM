@@ -1,11 +1,10 @@
-"""Robustesse : rangs, corrélation de Spearman (cours p.77-79), sensibilité et Monte-Carlo sur les poids."""
+"""Robustesse : rangs, corrélation de Spearman, sensibilité et Monte-Carlo sur les poids."""
 import numpy as np
 from scipy.stats import rankdata
 
-from mcdm.outranking import promethee
 from mcdm.ranking import topsis, vikor, waspas
 
-# Valeurs critiques de ρ de Spearman, test bilatéral à 5 % (n = 6 : 0,886 comme dans le cours p.79)
+# Valeurs critiques de ρ de Spearman, test bilatéral à 5 % (n = 6 : 0,886 comme dans le cours)
 SPEARMAN_CRITICAL = {5: 1.0, 6: 0.886, 7: 0.786, 8: 0.738, 9: 0.700, 10: 0.648, 11: 0.618, 12: 0.587}
 
 
@@ -24,14 +23,10 @@ def scores(method, X, w, types):
         return topsis(X, w, types)["RC"]
     if method == "VIKOR":
         return -vikor(X, w, types)["Q"]
-    if method == "PROMETHEE II":
-        span = X.max(0) - X.min(0)
-        n = X.shape[1]
-        return promethee(X, w, types, ["Linéaire"] * n, span * 0.1, span * 0.5, span * 0.3)["phi"]
     raise ValueError(method)
 
 
-METHODS = ["WSM", "WASPAS", "TOPSIS", "VIKOR", "PROMETHEE II"]
+METHODS = ["WSM", "WASPAS", "TOPSIS", "VIKOR"]
 
 
 def ranks(scores, higher_is_better=True):

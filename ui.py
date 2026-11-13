@@ -56,7 +56,6 @@ def problem_editor(key, presets, show_weights=True):
         types, weights = [1] * df.shape[1], [1 / df.shape[1]] * df.shape[1]
     else:
         p = presets[choice]
-        p = p() if callable(p) else p  # jeu coûteux calculé seulement quand on le choisit
         st.caption(p["source"])
         df, types = p["matrix"], p["types"]
         weights = p["weights"] or [1 / df.shape[1]] * df.shape[1]

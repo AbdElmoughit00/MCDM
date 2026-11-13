@@ -27,7 +27,7 @@ tab_course, tab_compare, tab_sens, tab_mc = st.tabs(
     ["Exemple du cours", "Comparer les méthodes", "Sensibilité à un poids", "Monte-Carlo sur les poids"])
 
 with tab_course:
-    st.caption("Cours p.78-79 : rangs de A1 à A6 selon trois méthodes (1 = la meilleure)")
+    st.caption("Rangs de A1 à A6 selon trois méthodes (1 = la meilleure)")
     r = pd.DataFrame(ds.COURSE_RANKS, index=[f"A{i}" for i in range(1, 7)])
     st.dataframe(r, width="stretch")
     names, M = rb.spearman_matrix(ds.COURSE_RANKS)
@@ -37,8 +37,7 @@ with tab_course:
               "le rang de A3 à A6 dépend de la méthode.")
 
 with tab_compare:
-    X, types, w = ui.problem_editor("rob", {"Six fournisseurs": ds.SUPPLIERS6, "Projets d'investissement": ds.INVESTMENTS,
-                                            "Électrification d'un village": ds.ENERGY})
+    X, types, w = ui.problem_editor("rob", {"Six fournisseurs": ds.SUPPLIERS6, "Projets d'investissement": ds.INVESTMENTS})
     M_ = X.to_numpy(float)
     alts = list(X.index)
     try:
@@ -46,7 +45,6 @@ with tab_compare:
     except ValueError as exc:
         st.error(str(exc))
         st.stop()
-    st.caption("PROMETHEE II utilise ici une fonction linéaire (q = 10 %, p = 50 % de l'étendue de chaque critère)")
     st.dataframe(pd.DataFrame(table, index=alts), width="stretch")
     names, M = rb.spearman_matrix(table)
     spearman_heatmap(names, M, "Accord entre méthodes (ρ de Spearman)")

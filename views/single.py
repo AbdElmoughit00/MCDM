@@ -17,7 +17,7 @@ with tab_maut:
     st.latex(r"S(A)=\sum_j w_j\,u_j(x_j)\qquad u_j=\frac{x_j-x_j^{min}}{x_j^{max}-x_j^{min}}\ (\text{bénéfice})"
              r"\quad u_j=\frac{x_j^{max}-x_j}{x_j^{max}-x_j^{min}}\ (\text{coût})\qquad "
              r"\text{Accepter si } S(A)\ge\tau")
-    st.caption("Cas d'usage du cours p.83 : scoring de crédit. Un dossier, cinq critères, bornes et poids fixés par la banque")
+    st.caption("Cas d'usage : scoring de crédit. Un dossier, cinq critères, bornes et poids fixés par la banque")
     left, right = st.columns([2, 3], gap="large")
     with left:
         default = [18000, 28.0, 6.0, 1, 15.0]
@@ -41,7 +41,7 @@ with tab_roc:
     st.markdown("Le seuil peut venir de la politique de l'entreprise, ou des **décisions passées** : on choisit le τ "
                 "qui sépare le mieux dossiers acceptés et rejetés.")
     st.latex(r"TPR=\frac{TP}{TP+FN}\quad FPR=\frac{FP}{FP+TN}\quad d=\sqrt{FPR^2+(1-TPR)^2}\ (\min)\quad J=TPR-FPR\ (\max)")
-    src = st.radio("Décisions passées", ["6 décisions du cours (p.85-88)", "300 dossiers de crédit (synthétiques)"],
+    src = st.radio("Décisions passées", ["6 décisions du cours", "300 dossiers de crédit (synthétiques)"],
                    horizontal=True)
     if src.startswith("6"):
         df = ds.PAST_DECISIONS
@@ -77,7 +77,7 @@ with tab_roc:
 
 with tab_dist:
     st.latex(r"D^+=\sqrt{\sum_j w_j(u_j-1)^2}\qquad D^-=\sqrt{\sum_j w_j u_j^2}\qquad C=\frac{D^-}{D^++D^-}")
-    st.caption("Logique TOPSIS appliquée à un seul dossier (cours p.89) : idéal = utilité 1 partout, anti-idéal = 0. "
+    st.caption("Logique TOPSIS appliquée à un seul dossier : idéal = utilité 1 partout, anti-idéal = 0. "
                "Les valeurs sont celles saisies dans l'onglet Score MAUT")
     dp, dm, C = distance_to_ideal(u, ds.CREDIT_WEIGHTS)
     c1, c2, c3 = st.columns(3)

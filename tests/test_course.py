@@ -3,7 +3,7 @@ import numpy as np
 import pytest
 
 import datasets as ds
-from mcdm import fuzzy, outranking, ranking, robustness, single, weighting
+from mcdm import fuzzy, ranking, robustness, single, weighting
 
 
 def test_ahp_car():
@@ -81,33 +81,6 @@ def test_spearman_course_matrix():
     assert robustness.spearman(r["TOPSIS"], r["VIKOR"]) == pytest.approx(0.77, abs=5e-3)
     assert robustness.spearman(r["TOPSIS"], r["PROMETHEE II"]) == pytest.approx(0.94, abs=5e-3)
     assert robustness.spearman(r["VIKOR"], r["PROMETHEE II"]) == pytest.approx(0.60, abs=5e-3)
-
-
-def test_promethee_flows_balance():
-    p, cfg = ds.ENERGY, ds.ENERGY_PROMETHEE
-    res = outranking.promethee(p["matrix"], p["weights"], p["types"], cfg["kinds"], cfg["q"], cfg["p"], cfg["s"])
-    assert res["phi"].sum() == pytest.approx(0)
-    assert ((res["pi"] >= 0) & (res["pi"] <= 1)).all()
-
-
-def test_promethee_dominance():
-    X = [[10, 1], [5, 2]]  # A0 domine A1 (bénéfice, coût)
-    res = outranking.promethee(X, [0.5, 0.5], [1, -1], ["Usuelle"] * 2, [0, 0], [1, 1], [1, 1])
-    assert res["phi"][0] == pytest.approx(1) and res["relation"][0, 1] == "P"
-
-
-def test_electre3_sites():
-    p, t = ds.SITES, ds.SITES_ELECTRE
-    res = outranking.electre3(p["matrix"], p["weights"], p["types"], t["q"], t["p"], t["v"])
-    assert ((res["S"] >= 0) & (res["S"] <= res["C"] + 1e-12)).all()
-    for key in ("descending", "ascending"):
-        assert sorted(a for cls in res[key] for a in cls) == list(range(5))
-
-
-def test_electre3_dominance():
-    X = [[10, 10], [5, 5]]
-    res = outranking.electre3(X, [0.5, 0.5], [1, 1], [0, 0], [1, 1], [20, 20])
-    assert res["descending"] == [[0], [1]] and res["ascending"] == [[0], [1]]
 
 
 def test_roc_course_table():

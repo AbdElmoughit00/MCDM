@@ -2,7 +2,7 @@
 import numpy as np
 from scipy.optimize import linprog
 
-# Indice aléatoire de Saaty (table du cours, p.29) ; n = 1, 2 sont toujours cohérents.
+# Indice aléatoire de Saaty ; n = 1, 2 sont toujours cohérents.
 RI = {1: 0.0, 2: 0.0, 3: 0.58, 4: 0.90, 5: 1.12, 6: 1.24, 7: 1.32, 8: 1.41, 9: 1.45, 10: 1.56}
 
 
@@ -33,7 +33,7 @@ def ahp_global(criteria_weights, local_priorities):
 
 
 def bwm(best, worst, a_bo, a_ow):
-    """BWM linéaire (cours p.38-43) : min ξ s.c. |w_B - a_Bj w_j| <= ξ, |w_j - a_jW w_W| <= ξ, Σw = 1."""
+    """BWM linéaire : min ξ s.c. |w_B - a_Bj w_j| <= ξ, |w_j - a_jW w_W| <= ξ, Σw = 1."""
     a_bo, a_ow = np.asarray(a_bo, dtype=float), np.asarray(a_ow, dtype=float)
     n = len(a_bo)
     if a_bo[best] != 1 or a_ow[worst] != 1:
@@ -61,7 +61,7 @@ def bwm(best, worst, a_bo, a_ow):
 
 
 def minmax(X, types):
-    """Normalisation min-max orientée (cours CRITIC p.47) ; types[j] = +1 bénéfice, -1 coût. Colonne constante -> 0."""
+    """Normalisation min-max orientée (CRITIC) ; types[j] = +1 bénéfice, -1 coût. Colonne constante -> 0."""
     X = np.asarray(X, dtype=float)
     lo, hi = X.min(axis=0), X.max(axis=0)
     span = np.where(hi > lo, hi - lo, 1.0)
@@ -70,7 +70,7 @@ def minmax(X, types):
 
 
 def entropy(D):
-    """Entropie (cours p.44-45) sur une matrice déjà normalisée et positive D (m alternatives x n critères)."""
+    """Entropie sur une matrice déjà normalisée et positive D (m alternatives x n critères)."""
     D = np.asarray(D, dtype=float)
     if (D < 0).any():
         raise ValueError("L'entropie exige des valeurs positives : normaliser d'abord (min-max)")
@@ -85,7 +85,7 @@ def entropy(D):
 
 
 def critic(X, types):
-    """CRITIC (cours p.46-49) : écart type x indépendance (1 - |ρ|)."""
+    """CRITIC : écart type x indépendance (1 - |ρ|)."""
     R = minmax(X, types)
     rho = np.corrcoef(R, rowvar=False)
     rho = np.nan_to_num(rho, nan=0.0)  # colonne constante : aucune corrélation exploitable

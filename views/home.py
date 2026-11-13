@@ -13,8 +13,7 @@ with left:
     )
     st.markdown(
         "1. **Pondérer les critères** : par jugement d'experts (AHP, BWM) ou à partir des données (Entropie, CRITIC)\n"
-        "2. **Classer les alternatives** : par agrégation compensatoire (WSM, WPM, WASPAS, TOPSIS, VIKOR) "
-        "ou par surclassement, sans compensation (PROMETHEE, ELECTRE III)"
+        "2. **Classer les alternatives** : par agrégation des critères (WSM, WPM, WASPAS, TOPSIS, VIKOR)"
     )
     st.markdown(
         "Chaque page suit le même déroulé : le principe et ses formules, les données (modifiables, ou votre "
@@ -22,7 +21,7 @@ with left:
     )
 with right:
     with st.container(border=True):
-        st.caption("Processus de prise de décision (cours p.13)")
+        st.caption("Processus de prise de décision")
         st.markdown(
             "1. Identifier le problème\n"
             "2. Élaborer les alternatives\n"
@@ -36,8 +35,6 @@ st.dataframe(pd.DataFrame([
     ("Nature des données", "Jugements imprécis ou linguistiques", "Méthodes floues : Fuzzy TOPSIS, TOPSIS intuitionniste"),
     ("Nombre de décideurs", "Un seul expert", "MCDM simple"),
     ("Nombre de décideurs", "Plusieurs experts", "MCDM de groupe, avec agrégation des avis (moyenne floue, IFWA)"),
-    ("Compensation entre critères", "Acceptée", "Méthodes additives : WSM, TOPSIS"),
-    ("Compensation entre critères", "Refusée (sécurité, environnement)", "Surclassement : ELECTRE, PROMETHEE"),
     ("Effort demandé au décideur", "Élevé", "AHP : n(n − 1)/2 comparaisons"),
     ("Effort demandé au décideur", "Réduit", "BWM : 2n − 3 comparaisons"),
     ("Effort demandé au décideur", "Aucun", "CRITIC, Entropie"),

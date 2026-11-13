@@ -61,8 +61,3 @@ with st.expander("Étape 2 : solution et écarts aux jugements", expanded=True):
 ui.ranking_chart(crit, res["weights"], "Poids optimaux des critères")
 ui.result(f"**{crit[best]}** pèse {res['weights'][best]:.3f} ; ξ* = {res['xi']:.4f}"
           + (", les jugements sont cohérents." if res["xi"] < 0.1 else ", les jugements manquent de cohérence."))
-
-if case is ds.BWM_SUPPLIER:
-    st.info("Le cours (p.42) affiche les poids 0,552 / 0,207 / 0,155 / 0,086 avec ξ* = 0,08. Le ξ* concorde, mais "
-            "ces poids violent les contraintes de son propre modèle : leur plus grand écart vaut 0,223, au-dessus de "
-            "ξ*. Les poids ci-dessus sont l'optimum exact du programme linéaire des p.40-43.")

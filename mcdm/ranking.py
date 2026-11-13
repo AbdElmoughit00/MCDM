@@ -12,7 +12,7 @@ def _check(X, w, types):
 
 
 def linear_norm(X, types):
-    """Cours p.55 : bénéfice x / max, coût min / x."""
+    """bénéfice x / max, coût min / x."""
     X = np.asarray(X, dtype=float)
     if (X <= 0).any():
         raise ValueError("Cette normalisation exige des valeurs strictement positives")
@@ -21,7 +21,7 @@ def linear_norm(X, types):
 
 
 def waspas(X, w, types, lam=0.5):
-    """WSM (Q1), WPM (Q2) et WASPAS Q = λ Q1 + (1 - λ) Q2 (cours p.56-57)."""
+    """WSM (Q1), WPM (Q2) et WASPAS Q = λ Q1 + (1 - λ) Q2."""
     X, w, types = _check(X, w, types)
     R = linear_norm(X, types)
     q1 = R @ w
@@ -30,7 +30,7 @@ def waspas(X, w, types, lam=0.5):
 
 
 def topsis(X, w, types):
-    """TOPSIS (cours p.62-64) avec normalisation vectorielle."""
+    """TOPSIS avec normalisation vectorielle."""
     X, w, benefit = _check(X, w, types)
     norm = np.sqrt((X ** 2).sum(axis=0))
     R = X / np.where(norm > 0, norm, 1)
@@ -45,7 +45,7 @@ def topsis(X, w, types):
 
 
 def vikor(X, w, types, v=0.5):
-    """VIKOR (cours p.66-71) : S (utilité), R (regret), Q, puis conditions de compromis."""
+    """VIKOR : S (utilité), R (regret), Q, puis conditions de compromis."""
     X, w, benefit = _check(X, w, types)
     best = np.where(benefit, X.max(axis=0), X.min(axis=0))
     worst = np.where(benefit, X.min(axis=0), X.max(axis=0))
@@ -63,7 +63,7 @@ def vikor(X, w, types, v=0.5):
     a1, a2 = order[0], order[1]
     dq = 1 / (m - 1)
     c1 = Q[a2] - Q[a1] >= dq - 1e-12
-    c2 = S[a1] == S.min() and R[a1] == R.min()  # cours p.70 : meilleure en S et en R
+    c2 = S[a1] == S.min() and R[a1] == R.min()  # cours : meilleure en S et en R
     if c1 and c2:
         compromise = [a1]
     elif c1:

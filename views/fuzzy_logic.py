@@ -30,7 +30,7 @@ with tabs[0]:
     c1, c2 = st.columns([2, 3], gap="large")
     with c1:
         if kind == "Trapézoïdale":
-            st.caption("Exemple du cours p.104 : l'ensemble « âge moyen »")
+            st.caption("Exemple du cours : l'ensemble « âge moyen »")
             a, b, c, d = parse(st.text_input("a, b, c, d", "25, 35, 55, 65"), 4)
             mu = lambda x: fz.trapezoid(x, a, b, c, d)
             lo_x, hi_x = a - 0.25 * (d - a) - 1, d + 0.25 * (d - a) + 1
@@ -71,7 +71,7 @@ with tabs[0]:
               f"{float(mu(np.array([x0]))[0]):.0%}, là où la logique booléenne n'admet que 0 ou 1.")
 
 with tabs[1]:
-    st.markdown("**Nombres flous trapézoïdaux** N(a, b, c, d) ; triangulaire si b = c (cours p.108-109)")
+    st.markdown("**Nombres flous trapézoïdaux** N(a, b, c, d) ; triangulaire si b = c")
     c1, c2, c3 = st.columns(3)
     A = parse(c1.text_input("A", "4, 5, 6, 7"), 4)
     B = parse(c2.text_input("B", "1, 2, 3, 4"), 4)
@@ -93,7 +93,7 @@ with tabs[1]:
     ui.result(f"{op} = **({', '.join(f'{v:.3g}' for v in R)})**. La soustraction et la division croisent les "
               "bornes (a1 − b4, …), ce qui élargit toujours l'incertitude.")
 
-    st.markdown("**Nombres d'intervalle** [a1, a2] (cours p.110-111)")
+    st.markdown("**Nombres d'intervalle** [a1, a2]")
     c1, c2 = st.columns(2)
     I1 = parse(c1.text_input("A = [a1, a2]", "2, 4"), 2)
     I2 = parse(c2.text_input("B = [b1, b2]", "1, 3"), 2)
@@ -129,16 +129,16 @@ with tabs[2]:
         for q, color in [(1, ui.INK), (2, "#a1a1a6"), (3, "#85858b")]:
             fig.add_scatter(x=t, y=(1 - t ** q) ** (1 / q), name=f"μ^{q} + ν^{q} = 1", line=dict(color=color))
         fig.add_scatter(x=[mu_], y=[nu_], mode="markers", marker=dict(size=12, color=ui.ACCENT), name="(μ, ν)")
-        fig.update_layout(title="Espaces IFN, PFN et q-ROFN (cours p.120)", height=340, xaxis_title="μ",
+        fig.update_layout(title="Espaces IFN, PFN et q-ROFN", height=340, xaxis_title="μ",
                           yaxis_title="ν", xaxis=dict(range=[0, 1.02]), yaxis=dict(range=[0, 1.02], scaleanchor="x"))
         st.plotly_chart(fig, width="stretch", config={"displayModeBar": False})
-    st.markdown("**Exemple du vote (cours p.112)** : 10 personnes, 5 pour, 3 contre, 2 abstentions : α = (0,5 ; 0,3), "
+    st.markdown("**Exemple du vote** : 10 personnes, 5 pour, 3 contre, 2 abstentions : α = (0,5 ; 0,3), "
                 "π = 0,2. Score S = μ − ν, précision H = μ + ν.")
     if mu_ + nu_ <= 1:
         a = (mu_, nu_)
         b = (0.5, 0.3)
         sa, sb = fz.ifn_score(a), fz.ifn_score(b)
-        # score d'abord, précision pour départager (cours p.117)
+        # score d'abord, précision pour départager
         key_a, key_b = (round(sa, 9), round(fz.ifn_accuracy(a), 9)), (round(sb, 9), round(fz.ifn_accuracy(b), 9))
         better = "α_saisi > α_vote" if key_a > key_b else "α_vote > α_saisi" if key_a < key_b else "égalité"
         agg = fz.ifwa([a, b], [0.5, 0.5])
@@ -149,7 +149,7 @@ with tabs[2]:
 
 with tabs[3]:
     st.markdown("Pour un vote à quatre issues (pour, abstention, contre, refus de voter) : μ positif, π neutre, "
-                "ν négatif, avec μ + π + ν ≤ 1 ; le reste est le degré de refus (cours p.122-124).")
+                "ν négatif, avec μ + π + ν ≤ 1 ; le reste est le degré de refus.")
     c1, c2, c3 = st.columns(3)
     pos = c1.number_input("Pour", 0, 1000, 45)
     neu = c2.number_input("Abstention", 0, 1000, 20)

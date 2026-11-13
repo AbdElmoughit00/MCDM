@@ -19,7 +19,7 @@ AHP_CAR = {
     "alternatives": ["Voiture 1", "Voiture 2"],
     "A": [[1, 7, 3], [1 / 7, 1, 1 / 3], [1 / 3, 3, 1]],
     "local": [[[1, 7], [1 / 7, 1]], [[1, 0.2], [5, 1]], [[1, 9], [1 / 9, 1]]],
-    "source": "Cours p.32-34 : exercice achat d'une voiture",
+    "source": "Exercice du cours : achat d'une voiture",
 }
 
 AHP_HOSPITAL = {
@@ -43,11 +43,11 @@ AHP_HOSPITAL_INCONSISTENT = dict(AHP_HOSPITAL, A=[[1, 3, 1 / 5, 3], [1 / 3, 1, 5
 
 BWM_SUPPLIER = {"criteria": ["Qualité", "Prix", "Délai de livraison", "Engagement RSE"],
                 "best": 0, "worst": 3, "BO": [1, 3, 4, 8], "OW": [8, 5, 3, 1],
-                "source": "Cours p.37-43 : choix d'un fournisseur"}
+                "source": "Exercice du cours : choix d'un fournisseur"}
 
 BWM_FINTECH = {"criteria": ["Sécurité", "Coût", "Évolutivité", "Conformité réglementaire"],
                "best": 0, "worst": 2, "BO": [1, 4, 6, 2], "OW": [6, 2, 1, 4],
-               "source": "Cas construit : choix d'une plateforme Fintech (cours p.19)"}
+               "source": "Cas construit : choix d'une plateforme Fintech"}
 
 # ---------------- Matrices de décision ----------------
 
@@ -76,19 +76,19 @@ FINANCE = problem(
      "MAIS", "OPTE", "PODR", "RIVP", "VLEN", "ZABA"],
     FINANCE_COLUMNS, [1, -1, 1, -1, 1, 1, -1, -1, 1],
     weights=[0.0370, 0.0189, 0.0533, 0.0259, 0.2182, 0.3070, 0.0764, 0.1543, 0.1089],
-    source="Cours p.18 : données réelles de Vuković et al. (2020), 18 actions ; poids publiés dans l'article")
+    source="Données réelles de Vuković et al. (2020), 18 actions")
 
 CRITIC_MACHINES = problem(
     [[30, 0.1, 1, 20], [100, 0.7, 1, 40], [50, 1, 2, 10], [300, 2, 3, 35]],
     ["A1", "A2", "A3", "A4"],
     ["Épaisseur max. (C1)", "Largeur de coupe min. (C2)", "Qualité de découpe (C3)", "Coût de maintenance (C4)"],
-    [-1, -1, 1, -1], source="Cours p.51 : exercice CRITIC, machines de découpage")
+    [-1, -1, 1, -1], source="Exercice du cours : machines de découpage")
 
 WASPAS_MACHINES = problem(
     [[0.035, 847, 0.335, 1.760, 0.590], [0.027, 834, 0.335, 1.680, 0.665],
      [0.037, 808, 0.590, 2.400, 0.500], [0.028, 821, 0.500, 1.590, 0.410]],
     ["A1", "A2", "A3", "A4"], ["C1", "C2", "C3", "C4", "C5"], [-1, -1, 1, -1, 1],
-    weights=[0.331, 0.181, 0.369, 0.072, 0.047], source="Cours p.58 : exercice WASPAS, choix d'une machine")
+    weights=[0.331, 0.181, 0.369, 0.072, 0.047], source="Exercice du cours : choix d'une machine")
 
 INVESTMENTS = problem(
     [[12.4, 14.2, 4.5, 8, 6], [9.8, 17.5, 3.2, 6, 7], [15.1, 11.8, 5.8, 9, 4],
@@ -97,33 +97,15 @@ INVESTMENTS = problem(
      "Extension d'usine", "Centre de données"],
     ["VAN (M DH)", "TRI (%)", "Délai de récupération (ans)", "Alignement stratégique (/10)", "Risque (/10)"],
     [1, 1, -1, 1, -1], weights=[0.30, 0.20, 0.15, 0.20, 0.15],
-    source="Cas construit : budgétisation des capitaux (cours p.19), chiffres plausibles")
+    source="Cas construit : budgétisation des capitaux, chiffres plausibles")
 
 TOPSIS_CARS = problem(
     [[7, 9, 9, 8], [8, 7, 8, 7], [9, 6, 8, 9], [6, 7, 8, 6]], ["M1", "M2", "M3", "M4"],
     ["Style", "Fiabilité", "Économie de carburant", "Coût"], [1, 1, 1, -1], weights=[0.2, 0.1, 0.4, 0.3],
-    source="Cours p.65 : exercice TOPSIS, choix d'une voiture")
+    source="Exercice du cours : choix d'une voiture")
 
 VIKOR_MACHINES = problem([[1, 3000], [2, 3750], [5, 4500]], ["A1", "A2", "A3"], ["C1", "C2"], [-1, 1],
-                         weights=[0.5, 0.5], source="Cours p.72 : exercice VIKOR")
-
-ENERGY = problem(
-    [[185, 2, 78, 12, 3], [160, 1, 64, 8, 5], [240, 4, 95, 15, 6], [95, 38, 90, 5, 4], [210, 1, 85, 20, 7]],
-    ["Solaire + batteries", "Éolien", "Hybride solaire-éolien", "Groupe diesel", "Micro-hydraulique"],
-    ["Coût actualisé (k€)", "Émissions (t CO₂/an)", "Disponibilité (%)", "Emplois locaux", "Complexité de maintenance (/10)"],
-    [-1, -1, 1, 1, -1], weights=[0.30, 0.20, 0.25, 0.10, 0.15],
-    source="Cas construit : électrification d'un village isolé (cours p.4)")
-ENERGY_PROMETHEE = {"kinds": ["Linéaire", "En V", "Linéaire", "Par paliers", "Usuelle"],
-                    "q": [10, 0, 2, 2, 0], "p": [60, 20, 10, 6, 1], "s": [30, 10, 5, 3, 1]}
-
-SITES = problem(
-    [[42, 3.5, 3, 8, 4], [28, 1.2, 6, 7, 3], [35, 6.0, 2, 5, 7], [51, 4.8, 1, 9, 2], [30, 2.2, 8, 6, 5]],
-    ["Site Nord", "Site Port", "Site Plateau", "Site Zone franche", "Site Vallée"],
-    ["Coût foncier (M DH)", "Distance aux habitations (km)", "Risque d'inondation (/10)",
-     "Accès logistique (/10)", "Impact biodiversité (/10)"],
-    [-1, 1, -1, 1, -1], weights=[0.20, 0.25, 0.25, 0.15, 0.15],
-    source="Cas construit : implantation d'une usine chimique (critères sécurité/environnement non compensables)")
-SITES_ELECTRE = {"q": [2, 0.3, 0.5, 0.5, 0.5], "p": [6, 1.0, 1.5, 1.5, 1.5], "v": [20, 3.0, 4.0, 5.0, 4.0]}
+                         weights=[0.5, 0.5], source="Exercice du cours : choix d'une machine")
 
 SUPPLIERS6 = problem(
     [[82, 4.2, 12, 7], [75, 3.6, 9, 8], [90, 5.1, 15, 6], [68, 3.1, 7, 5], [85, 4.6, 10, 9], [79, 3.9, 14, 6]],
@@ -131,7 +113,7 @@ SUPPLIERS6 = problem(
     ["Qualité (/100)", "Prix unitaire (€)", "Délai (jours)", "Service (/10)"], [1, -1, -1, 1],
     weights=[0.35, 0.30, 0.15, 0.20], source="Cas construit : 6 fournisseurs")
 
-# Rangs publiés dans le cours p.78 (A1 à A6)
+# Rangs publiés dans le cours (A1 à A6)
 COURSE_RANKS = {"TOPSIS": [2, 1, 3, 5, 4, 6], "VIKOR": [1, 2, 4, 3, 5, 6], "PROMETHEE II": [2, 1, 3, 6, 4, 5]}
 
 # ---------------- Alternative unique ----------------
@@ -164,28 +146,11 @@ def credit_portfolio(n=300, seed=7):
     return df
 
 
-def stock_series(months=60, seed=11):
-    """Séries mensuelles synthétiques pour 3 actions : rendement (%), volatilité (%), volume (M DH)."""
-    rng = np.random.default_rng(seed)
-    t = np.arange(months)
-    specs = {"Action tech": (1.4, -0.010, 7.5, 0.04, 120, 1.2),
-             "Action énergie": (0.6, 0.012, 5.0, -0.02, 80, 0.4),
-             "Action bancaire": (0.8, 0.002, 3.5, 0.01, 150, -0.3)}
-    frames = {}
-    for name, (r0, r_tr, v0, v_tr, l0, l_tr) in specs.items():
-        frames[name] = pd.DataFrame({
-            "Rendement (%)": r0 + r_tr * t + rng.normal(0, 0.35, months),
-            "Volatilité (%)": v0 + v_tr * t + rng.normal(0, 0.3, months),
-            "Liquidité (M DH)": l0 + l_tr * t + rng.normal(0, 6, months),
-        }, index=pd.period_range("2022-01", periods=months, freq="M").astype(str))
-    return frames
-
-
 # ---------------- Flou ----------------
 
 FUZZY_SINGLE = {"criteria": ["ROA (%)", "Liquidité"], "weights": [0.6, 0.4],
                 "tfn": [[1.0, 1.2, 1.5], [110, 120, 130]], "c_max": [1.5, 130],
-                "source": "Cours p.134 : évaluation floue d'une seule alternative"}
+                "source": "Exemple du cours : évaluation floue d'une seule alternative"}
 
 FUZZY_TOPSIS_HIRING = {
     "alternatives": ["A1", "A2", "A3"],
@@ -198,7 +163,7 @@ FUZZY_TOPSIS_HIRING = {
                 [["VG", "MG", "G", "G", "G"], ["G", "G", "MG", "VG", "G"], ["F", "VG", "VG", "MG", "MG"]]],
     # weights[décideur][critère]
     "weights": [["H", "VH", "VH", "VH", "M"], ["VH", "VH", "H", "VH", "MH"], ["MH", "VH", "H", "VH", "MH"]],
-    "source": "Cours p.140-142 : recrutement d'un ingénieur (Chen, 2000)",
+    "source": "Exercice du cours : recrutement d'un ingénieur (Chen, 2000)",
 }
 
 IF_CLOUD = {
@@ -222,33 +187,3 @@ IF_CLOUD = {
                      [(0.7, 0.2), (0.9, 0.05), (0.6, 0.3), (0.6, 0.3)]],
     "source": "Cas construit : choix d'un fournisseur cloud, 3 décideurs, nombres flous intuitionnistes",
 }
-
-# ---------------- LLM ----------------
-
-CVS = [
-    {"nom": "Candidate A", "texte": "Ingénieur logiciel avec 7 ans d'expérience en développement Python et Java, "
-     "management d'une équipe de 5 personnes, certifié PMP. Prétentions : 85 000 €/an.",
-     "scores": [8, 7, 3], "justifications": [
-         "7 ans en Python/Java, management d'équipe et certification PMP valorisent l'expérience",
-         "Management d'une équipe signalé mais pas de références externes ni d'exemples de communication",
-         "Prétentions à 85 k€ dans la fourchette haute du marché pour le poste visé"]},
-    {"nom": "Candidat B", "texte": "Développeur back-end, 3 ans en Go et PostgreSQL dans une fintech. Anime les "
-     "revues de code et a présenté deux talks en meetup. Prétentions : 55 000 €/an.",
-     "scores": [5, 8, 8], "justifications": [
-         "3 ans d'expérience sur une pile moderne, sans encadrement d'équipe",
-         "Revues de code animées et deux interventions publiques : communication démontrée",
-         "55 k€ : bas de la fourchette pour ce profil"]},
-    {"nom": "Candidate C", "texte": "Architecte cloud, 12 ans d'expérience, a dirigé la migration d'un SI bancaire "
-     "vers AWS (40 personnes). Anglais courant. Prétentions : 110 000 €/an.",
-     "scores": [10, 8, 1], "justifications": [
-         "12 ans et une migration d'envergure : expérience technique maximale",
-         "Pilotage d'un programme de 40 personnes, anglais courant",
-         "110 k€ : dépasse nettement le budget du poste"]},
-    {"nom": "Candidat D", "texte": "Jeune diplômé ingénieur, stage de 6 mois en data engineering, projets "
-     "Spark et Airflow. Président du club robotique. Prétentions : 38 000 €/an.",
-     "scores": [3, 6, 10], "justifications": [
-         "Expérience limitée à un stage et des projets académiques",
-         "Présidence d'association : leadership naissant, pas encore en contexte professionnel",
-         "38 k€ : très en dessous du budget"]},
-]
-CV_CRITERIA = ["Expérience technique", "Communication / leadership", "Adéquation salariale"]

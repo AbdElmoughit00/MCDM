@@ -11,7 +11,7 @@ ui.header("TOPSIS intuitionniste", "Décision de groupe : chaque décideur expri
 
 c = ds.IF_CLOUD
 st.caption(c["source"])
-with st.expander("Principe et formules (cours p.143-150)"):
+with st.expander("Principe et formules"):
     st.latex(r"\alpha_{ij}=IFWA_\sigma(\alpha^1_{ij},\dots,\alpha^l_{ij})="
              r"\Big(1-\prod_k(1-\mu^k_{ij})^{\sigma_k},\ \prod_k(\nu^k_{ij})^{\sigma_k}\Big)")
     st.latex(r"\alpha_{ij}\otimes w_j=\big(\mu_{ij}\mu_{w_j},\ \nu_{ij}+\nu_{w_j}-\nu_{ij}\nu_{w_j}\big)")

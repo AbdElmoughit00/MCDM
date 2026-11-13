@@ -19,23 +19,12 @@ nav = st.navigation({
         P("topsis", "TOPSIS", "my_location"),
         P("vikor", "VIKOR", "handshake"),
     ],
-    "Surclassement": [
-        P("promethee", "PROMETHEE", "swap_vert"),
-        P("electre", "ELECTRE III", "rule"),
-    ],
-    "Analyse": [
-        P("robustness", "Robustesse et comparaison", "query_stats"),
-        P("hybrid", "Pipeline hybride", "merge"),
-    ],
-    "Alternative unique et IA": [
-        P("single", "Évaluation absolue", "verified"),
-        P("ai", "MCDM et apprentissage", "model_training"),
-    ],
+    "Analyse": [P("robustness", "Robustesse et comparaison", "query_stats")],
+    "Alternative unique": [P("single", "Évaluation absolue", "verified")],
     "Logique floue": [
         P("fuzzy_logic", "Ensembles flous", "blur_on"),
         P("fuzzy_mcdm", "MCDM floue et Fuzzy TOPSIS", "blur_linear"),
         P("if_topsis", "TOPSIS intuitionniste", "how_to_vote"),
     ],
-    "IA générative": [P("llm", "Scores extraits de textes", "description")],
 })
 nav.run()

@@ -46,4 +46,4 @@ with st.expander("Étape 3 : entropie, diversification et poids", expanded=True)
 ui.ranking_chart(crit, res["weights"], "Poids par entropie")
 top = crit[int(np.argmax(res["weights"]))]
 ui.result(f"**{top}** est le critère le plus discriminant (w = {res['weights'].max():.3f}). "
-          "L'entropie ne dit rien de son importance stratégique : à confronter à l'avis d'un expert (page Pipeline hybride).")
+          "L'entropie ne dit rien de son importance stratégique : à confronter à l'avis d'un expert.")

@@ -17,50 +17,8 @@ with st.expander("Principe et formules"):
              r"RC_i^*=\frac{S_i^-}{S_i^++S_i^-}\in[0,1]")
 
 
-@st.cache_data(show_spinner="Validation croisée de 5 modèles sur les chiffres manuscrits (environ 30 s au premier calcul)…")
-def ml_models():
-    """Scores réels de 5 classifieurs (validation croisée à 5 plis) sur les chiffres manuscrits de scikit-learn."""
-    import time
-
-    from sklearn.calibration import CalibratedClassifierCV
-    from sklearn.datasets import load_digits
-    from sklearn.ensemble import HistGradientBoostingClassifier, RandomForestClassifier
-    from sklearn.linear_model import LogisticRegression
-    from sklearn.metrics import cohen_kappa_score, make_scorer
-    from sklearn.model_selection import cross_validate
-    from sklearn.neighbors import KNeighborsClassifier
-    from sklearn.pipeline import make_pipeline
-    from sklearn.preprocessing import StandardScaler
-    from sklearn.svm import SVC
-
-    Xd, y = load_digits(return_X_y=True)  # 1 797 images 8x8 de chiffres 0 à 9 : 10 classes
-    models = {"SVM": CalibratedClassifierCV(SVC(), ensemble=False),  # probabilités nécessaires pour l'AUC
-              "Random Forest": RandomForestClassifier(random_state=0),
-              "Régression logistique": LogisticRegression(max_iter=2000),
-              "Gradient Boosting": HistGradientBoostingClassifier(max_iter=50, random_state=0),
-              "KNN": KNeighborsClassifier()}
-    # 10 classes : moyennes macro, AUC « un contre tous »
-    scoring = {"Accuracy": "accuracy", "Recall": "recall_macro", "Precision": "precision_macro", "F1": "f1_macro",
-               "AUC": "roc_auc_ovr", "Kappa": make_scorer(cohen_kappa_score)}
-    rows = {}
-    for name, model in models.items():
-        t0 = time.perf_counter()
-        cv = cross_validate(make_pipeline(StandardScaler(), model), Xd, y, cv=5, scoring=scoring)
-        rows[name] = {k: cv[f"test_{k}"].mean() for k in scoring}
-        rows[name]["Temps (s)"] = time.perf_counter() - t0
-    return pd.DataFrame(rows).T
-
-
-def ml():
-    scores = ml_models()
-    return ds.problem(scores.to_numpy(), list(scores.index), list(scores.columns),
-                      [1, 1, 1, 1, 1, 1, -1], weights=[0.15, 0.20, 0.15, 0.15, 0.15, 0.10, 0.10],
-                      source="Scores mesurés : validation croisée à 5 plis sur la reconnaissance de chiffres manuscrits "
-                             "(scikit-learn, 10 classes, moyennes macro) ; cas d'application du cours p.14")
-
-
 X, types, w = ui.problem_editor("topsis", {"Choix d'une voiture (cours)": ds.TOPSIS_CARS,
-                                           "Choix d'un modèle de ML": ml, "Projets d'investissement": ds.INVESTMENTS})
+                                           "Projets d'investissement": ds.INVESTMENTS})
 try:
     res = topsis(X.to_numpy(float), w, types)
 except ValueError as exc:

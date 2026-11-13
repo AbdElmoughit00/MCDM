@@ -1,4 +1,4 @@
-"""Logique floue (cours p.95-130) et MCDM floue (p.131-150)."""
+"""Logique floue et MCDM floue."""
 import numpy as np
 
 # ---------- Fonctions d'appartenance et ensembles flous ----------
@@ -24,7 +24,7 @@ def alpha_cut_trapezoid(a, b, c, d, alpha):
     return a + alpha * (b - a), d - alpha * (d - c)
 
 
-# ---------- Arithmétique des nombres flous (triangulaires ou trapézoïdaux, cours p.109) ----------
+# ---------- Arithmétique des nombres flous (triangulaires ou trapézoïdaux, cours) ----------
 
 
 def f_add(A, B):
@@ -49,7 +49,7 @@ def f_scale(lam, A):
     return tuple(lam * np.asarray(A, dtype=float))
 
 
-# ---------- Intervalles (cours p.110-111) ----------
+# ---------- Intervalles ----------
 
 
 def i_mul(A, B):
@@ -63,7 +63,7 @@ def i_div(A, B):
     return i_mul(A, (1 / B[1], 1 / B[0]))
 
 
-# ---------- Nombres flous intuitionnistes (cours p.113-117) ----------
+# ---------- Nombres flous intuitionnistes ----------
 
 
 def ifn_add(a, b):
@@ -107,7 +107,7 @@ def hesitation(mu, nu, q=1):
     return max(rest, 0) ** (1 / q)
 
 
-# ---------- Ensembles flous picturaux (cours p.122-124) ----------
+# ---------- Ensembles flous picturaux ----------
 
 
 def pfn_add(A, B):
@@ -118,7 +118,7 @@ def pfn_scale(lam, A):
     return 1 - (1 - A[0]) ** lam, A[1] ** lam, A[2] ** lam
 
 
-# ---------- Ensembles flous hésitants (cours p.125-130) ----------
+# ---------- Ensembles flous hésitants ----------
 
 
 def hfe_score(h):
@@ -154,7 +154,7 @@ def hfe_hamming(h1, h2):
 
 
 def fuzzy_single(tfns, w, c_max):
-    """Cours p.134 : normalisation (a,b,c) / c_max, agrégation Σ w x̃, défuzzification centre de gravité."""
+    """normalisation (a,b,c) / c_max, agrégation Σ w x̃, défuzzification centre de gravité."""
     T = np.asarray(tfns, dtype=float) / np.asarray(c_max, dtype=float)[:, None]
     agg = np.asarray(w, dtype=float) @ T
     return T, agg, agg.mean()
@@ -168,7 +168,7 @@ WEIGHT_SCALE = {"VL": (0, 0, 0.1), "L": (0, 0.1, 0.3), "ML": (0.1, 0.3, 0.5), "M
 
 
 def fuzzy_topsis(ratings, weights, types):
-    """Fuzzy TOPSIS (Chen, 2000), cours p.135-139.
+    """Fuzzy TOPSIS (Chen, 2000), cours.
 
     ratings : (m, n, K, 3) nombres triangulaires par décideur ; weights : (n, K, 3) ; types : +1 / -1.
     """
@@ -191,7 +191,7 @@ def fuzzy_topsis(ratings, weights, types):
 
 
 def if_topsis(dm_matrices, dm_weights, dm_criteria, types):
-    """TOPSIS intuitionniste (cours p.143-150).
+    """TOPSIS intuitionniste.
 
     dm_matrices : (K, m, n, 2) ; dm_weights : (K,) ; dm_criteria : (K, n, 2) importances des critères en IFN.
     """
