@@ -1,0 +1,31 @@
+# Direction : la feuille de TD corrigée, version nuit. Neutres graphite sombres, un accent bleu cobalt, chiffres en mono.
+[theme]
+base = "dark"
+primaryColor = "#5b8def"
+backgroundColor = "#141415"
+secondaryBackgroundColor = "#232325"
+textColor = "#e4e4e7"
+linkColor = "#7da4f2"
+borderColor = "#2e2e31"
+dataframeBorderColor = "#2e2e31"
+dataframeHeaderBackgroundColor = "#19191b"
+showWidgetBorder = true
+font = "'IBM Plex Sans':https://fonts.googleapis.com/css2?family=IBM+Plex+Sans:wght@400;500;600&display=swap"
+codeFont = "'IBM Plex Mono':https://fonts.googleapis.com/css2?family=IBM+Plex+Mono:wght@400;500&display=swap"
+headingFontWeights = [500, 500, 500, 500, 500, 500]
+baseRadius = "10px"
+redColor = "#e5484d"
+greenColor = "#4cc38a"
+blueColor = "#5b8def"
+codeBackgroundColor = "#19191b"
+chartCategoricalColors = ["#5b8def", "#a1a1a6", "#85858b", "#c4c4c8", "#5a5a5f", "#d4d4d8"]
+
+[theme.sidebar]
+backgroundColor = "#0f0f10"
+secondaryBackgroundColor = "#19191b"
+
+[client]
+toolbarMode = "minimal"
+
+[server]
+runOnSave = true
